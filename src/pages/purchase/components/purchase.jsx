@@ -1,5 +1,5 @@
 import {
-    Table, Card, Divider, Input, message, Button, Form, Icon, Select, Modal, Popconfirm
+    Table, Card,Icon, Divider, Input, message, Button, Form, Slider, InputNumber, Row, Col,Tooltip, Select, Modal, Popconfirm
 } from 'antd';
 import './style.css';
 import Highlighter from 'react-highlight-words';
@@ -125,6 +125,7 @@ class CreatePurchase extends React.Component {
     state = {
         confirmDirty: false,
         loading: false,
+        inputValue: 1,
     };
 
     handleSubmit = (e) => {
@@ -132,21 +133,28 @@ class CreatePurchase extends React.Component {
         // console.log(this.props)
         const { form } = this.props.props;
         const { onOk } = this.props;
+        const { inputValue } = this.state;
+
         // console.log(form)
         form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                onOk(values);
+                onOk(values,inputValue);
             }
         })
     }
     onCancel = (e) => {
         e.preventDefault();
     }
-
+    onChange = value => {
+        this.setState({
+            inputValue: value,
+        });
+    };
     render() {
         // console.log(this)
         const { getFieldDecorator } = this.props.props.form;
         const { visible: createVisible, onCancel } = this.props;
+        const { inputValue } = this.state;
 
         const formItemLayout = {
             labelCol: {
@@ -223,16 +231,41 @@ class CreatePurchase extends React.Component {
                         })(<Input />)}
                     </Form.Item>
                     <Form.Item
-                        label="市场价"
+                        label="采购单价"
                     >
-                        {getFieldDecorator('price', {
+                        {getFieldDecorator('buyFee', {
                             rules: [{ required: true, message: '请输入市场价' }],
                         })(<Input />)}
                     </Form.Item>
                     <Form.Item
+                        label="采购数目"
+                    >
+                        {getFieldDecorator('buyNum', {
+                            rules: [{ required: false }],
+                        })(<Row>
+                            <Col span={12}>
+                                <Slider
+                                    min={1}
+                                    max={20}
+                                    onChange={this.onChange}
+                                    value={typeof inputValue === 'number' ? inputValue : 0}
+                                />
+                            </Col>
+                            <Col span={4}>
+                                <InputNumber
+                                    min={1}
+                                    max={20}
+                                    style={{ margin: '0 16px' }}
+                                    value={inputValue}
+                                    onChange={this.onChange}
+                                />
+                            </Col>
+                        </Row>)}
+                    </Form.Item>
+                    <Form.Item
                         label="供应类型"
                     >
-                        {getFieldDecorator('purchases', {
+                        {getFieldDecorator('buyType', {
                             rules: [{ required: true, message: '请输入供应类型' }],
                         })(<Select
                             optionFilterProp="children"
@@ -247,7 +280,7 @@ class CreatePurchase extends React.Component {
                         </Select>)}
                     </Form.Item>
                     <Form.Item
-                        label="供应员"
+                        label="供应商"
                     >
                         {getFieldDecorator('buyer', {
                             rules: [{ required: true, message: '请输入供应员/供应商' }],
@@ -256,7 +289,7 @@ class CreatePurchase extends React.Component {
                     <Form.Item
                         label="商品状态"
                     >
-                        {getFieldDecorator('state', {
+                        {getFieldDecorator('buyState', {
                             rules: [{ required: true }],
                         })(<Select
                             optionFilterProp="children"
@@ -269,6 +302,20 @@ class CreatePurchase extends React.Component {
                             <Option value="已上架">已上架</Option>
                             <Option value="已下架">已下架</Option>
                         </Select>)}
+                    </Form.Item>
+                    <Form.Item
+                        label={
+                        <span>
+                            采购备注&nbsp;
+                            <Tooltip title="本次采购过程有啥变化？">
+                                <Icon type="question-circle-o" />
+                            </Tooltip>
+                        </span>
+                        }
+                    >
+                        {getFieldDecorator('buyComment', {
+                            rules: [{ required: false}],
+                        })(<Input.TextArea rows={4} />)}
                     </Form.Item>
                 </Form>
             </Modal>
@@ -348,11 +395,37 @@ class EditableTable extends React.Component {
             callback: (inst) => this.setState({ dataSource: inst }),
         });
     }
+    dateToString(now) {
+        var year = now.getFullYear();
+        var month = (now.getMonth() + 1).toString();
+        var day = (now.getDate()).toString();
+        var hour = (now.getHours()).toString();
+        if (month.length == 1) {
+            month = "0" + month;
+        }
+        if (day.length == 1) {
+            day = "0" + day;
+        }
+        if (hour.length == 1) {
+            hour = "0" + hour;
+        }
+        var dateTime = ""+year +""+  month + "" + day + "" + hour;
+        return dateTime;
+    }
 
-    onOk = (data) => {
+    onOk = (data,buyNum) => {
         //后端交互
+        var date = new Date()//id格式
+        date = this.dateToString(date);
+        console.log(date)
+        var num = Math.floor(Math.random() * 10 + 1);
         const { dispatch } = this.props;
-        data.buyId = this.state.count + 1;
+        data.buyId = date;
+        // data.order
+        data.buyNum = buyNum;
+        if(data.buyComment==null){
+            data.buyComment=""
+        }
         const dataSource = [...this.state.dataSource];
         console.log(data)
         dispatch({
@@ -362,9 +435,9 @@ class EditableTable extends React.Component {
                 if (response === true) {
                     message.success("创建成功！");
                     this.setState({ createVisible: false });
-                    this.setState({
-                        dataSource: [...dataSource, data],
-                        count: data.buyId,
+                    dispatch({
+                        type: 'purchase/queryPurchase',
+                        callback: (inst) => this.setState({ dataSource: inst }),
                     });
                 }
                 else {

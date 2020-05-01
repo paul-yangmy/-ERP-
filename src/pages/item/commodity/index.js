@@ -210,6 +210,7 @@ class CreateCommodity extends React.Component {
       </div>
     );
     const { imageUrl } = this.state;
+    console.log(imageUrl)
     return (
       <Modal
         title="新建商品"
@@ -534,10 +535,14 @@ class EditableTable extends React.Component {
         if (response === true) {
           message.success("创建成功！");
           this.setState({ createVisible: false });
-          this.setState({
-            dataSource: [...dataSource, data],
-            count: data.itemId,
+          dispatch({
+            type: 'commodity/queryCommodity',
+            callback: (inst, count) => this.setState({ dataSource: inst, count: inst.length }),
           });
+          // this.setState({
+          //   dataSource: [...dataSource, data],
+          //   count: data.itemId,
+          // });
         }
         else {
           message.error("创建失败！");

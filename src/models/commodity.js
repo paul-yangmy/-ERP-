@@ -35,7 +35,7 @@ export default {
       }
     },
     *create({ payload, callback }, { call }) {
-      // console.log(payload)
+      console.log(payload)
       const response = yield call(createCommodity, payload);
       if (callback) {
         callback(response);
