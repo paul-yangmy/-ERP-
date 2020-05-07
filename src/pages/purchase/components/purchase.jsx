@@ -378,7 +378,7 @@ class EditableTable extends React.Component {
                     widt: 140,
                     render: (text, record) =>
                         this.state.dataSource.length >= 1 ? (
-                            <Popconfirm title="确定要删除么？" onConfirm={() => this.handleDelete(record.itemId)} okText="确认" cancelText="取消">
+                            <Popconfirm title="确定要删除么？" onConfirm={() => this.handleDelete(record.buyId)} okText="确认" cancelText="取消">
                                 <a>删除</a>
                             </Popconfirm>
                         ) : null,
@@ -432,13 +432,18 @@ class EditableTable extends React.Component {
             type: "purchase/create",
             payload: data,
             callback: response => {
-                if (response === true) {
+                if (response!==null) {
                     message.success("创建成功！");
                     this.setState({ createVisible: false });
+                    console.log(response)
                     dispatch({
                         type: 'purchase/queryPurchase',
                         callback: (inst) => this.setState({ dataSource: inst }),
                     });
+                    // this.setState({
+                    //     dataSource: [...dataSource, response.purchase],
+                    //     count: response.orderBuyId,
+                    // });
                 }
                 else {
                     message.error("创建失败！");
@@ -459,6 +464,7 @@ class EditableTable extends React.Component {
     handleDelete = key => {
         const dataSource = [...this.state.dataSource];
         const { dispatch } = this.props;
+        console.log(key);
         if (dispatch) {
             dispatch({
                 type: 'purchase/delete',

@@ -48,7 +48,7 @@ export default {
         *create({ payload, callback }, { call }) {
             console.log(payload)
             const response = yield call(createPurchase, payload);
-            console.log(response)
+            // console.log(response)
             if (callback) {
                 callback(response);
             }
