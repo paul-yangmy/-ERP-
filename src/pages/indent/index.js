@@ -12,7 +12,7 @@ class CreateIndent extends React.Component {
     state = {
         confirmDirty: false,
         loading: false,
-        inputValue: 1,
+        inputValue: [1],
     };
     
     handleSubmit = (e) => {
@@ -62,9 +62,13 @@ class CreateIndent extends React.Component {
     onChange = (values,k) => {
         const{inputValue}=this.state;
         console.log(k)
+        console.log(values)
+        console.log(inputValue)
+        inputValue[k]=values;
         this.setState({
-            inputValue: value,
+            inputValue: inputValue,
         });
+        console.log(this.state.inputValue)
     };
 
     render() {
@@ -90,7 +94,7 @@ class CreateIndent extends React.Component {
             // console.log(inputValue)
             getFieldDecorator('keys', { initialValue: [] });
             const keys = getFieldValue('keys');
-            console.log(keys)
+            // console.log(keys)
             const formItems = keys.map((k, index) => (
                 <Form.Item
                     {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
@@ -110,7 +114,7 @@ class CreateIndent extends React.Component {
                             <Col span={10}>商品名称&nbsp;&nbsp;: </Col>
                             <Col span={14}><Input /></Col>
                         </Row>
-                        <Row key={k.id}>
+                        <Row >
                             <Col span={10}>
                                 采购数量:
                             </Col>
@@ -118,16 +122,16 @@ class CreateIndent extends React.Component {
                                 <Slider
                                     min={1}
                                     max={20}
-                                    onChange={(values, key) => this.onChange(values, k.id)}
-                                    value={typeof inputValue === 'number' ? inputValue : 0}
+                                    onChange={(values, key) => this.onChange(values, k)}
+                                    value={typeof inputValue[k] === 'number' ? inputValue[k] : 0}
                                 />
                             </Col>
                             <Col span={4}>
                                 <InputNumber
                                     min={1}
                                     max={20}
-                                    value={inputValue}
-                                    onChange={(values, key) => this.onChange(values, k.id)}
+                                    value={inputValue[k]}
+                                    onChange={(values, key) => this.onChange(values, k)}
                                 />
                             </Col>
                         </Row>
@@ -159,15 +163,15 @@ class CreateIndent extends React.Component {
                             rules: [{ required: true, message: '' }],
                         })(<Input />)}
                     </Form.Item>
-                    {/* {formItems}
+                    {formItems}
                     <Form.Item {...formItemLayoutWithOutLabel}>
                         <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
                             <Icon type="plus" />添加商品
-                </Button>
-                    </Form.Item> */}
+                     </Button>
+                    </Form.Item>
 
 
-                    <Form.List name="names">
+                    {/* <Form.List name="names">
                         {(fields, { add, remove }) => {
                             return (
                                 <div>
@@ -212,18 +216,18 @@ class CreateIndent extends React.Component {
                                             style={{ width: '60%' }}
                                         >
                                             <PlusOutlined /> Add field
-                </Button>
+                                    </Button>
                                     </Form.Item>
                                 </div>
                             );
                         }}
-                    </Form.List>
+                    </Form.List> */}
 
-                    <Form.Item>
+                    {/* <Form.Item>
                         <Button type="primary" htmlType="submit">
                             Submit
                   </Button>
-                    </Form.Item>
+                    </Form.Item> */}
                 </Form>
             </Modal>
         );
@@ -368,9 +372,9 @@ class IndentView extends React.Component {
                 if (response === true) {
                     message.success("创建成功！");
                     this.setState({ createVisible: false });
-                    this.setState({
-                        dataSource: [...dataSource, data],
-                        count: data.itemId,
+                    dispatch({
+                        type: 'indent/queryIndent',
+                        callback: (inst, count) => this.setState({ dataSource: inst, count: inst.length }),
                     });
                 }
                 else {

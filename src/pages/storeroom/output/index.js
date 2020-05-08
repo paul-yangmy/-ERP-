@@ -131,7 +131,7 @@ class outStorage extends React.Component {
             { title: '顾客', dataIndex: 'customer' },
             { title: '制表人', dataIndex: 'lister'},
             { title: '账单金额', dataIndex: 'indent.totalAmount' },
-            { title: '出库状态', dataIndex: 'outState' ,editable: true},
+            { title: '状态', dataIndex: 'outState' ,editable: true},
         ];
         this.state = {
             dataSource: [],

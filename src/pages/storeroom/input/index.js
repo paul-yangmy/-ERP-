@@ -124,12 +124,12 @@ class InStorage extends React.Component {
                 width: 100,
                 key: 'inId',
             },
-            { title: '出库时间', dataIndex: 'inDate' },
+            { title: '入库时间', dataIndex: 'inDate' },
             { title: '仓库类型', dataIndex: 'storageNam' },
             { title: '采购单号', dataIndex: 'purchase.buyId' },
             { title: '提供商', dataIndex: 'purchase.buyer' },
             { title: '制表人', dataIndex: 'lister' },
-            { title: '出库状态', dataIndex: 'inState', editable: true },
+            { title: '状态', dataIndex: 'inState', editable: true },
         ];
         this.state = {
             dataSource: [],

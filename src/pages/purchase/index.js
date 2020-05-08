@@ -35,7 +35,7 @@ class CarouselCard extends React.Component {
         const { loading, cardLoading} = this.state;
         return(
             <PageHeaderWrapper>
-                <Button type="primary" icon="scan" onClick={this.onChange} loading ={!loading}>刷新订单数据！</Button>
+                <Button type="primary" icon="scan" onClick={this.onChange} loading ={!loading}>刷新采购单数据！</Button>
                 
                 <Carousel autoplay effect="fade" ref={this.change} className={styles.carousel}>
                     <div>
