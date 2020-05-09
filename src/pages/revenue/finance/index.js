@@ -193,47 +193,6 @@ class EditableTable extends React.Component {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     };
-    //批量上下架
-    // updateState = (flag) => {
-    //     // console.log(flag)
-    //     console.log(this.state.selectedRowKeys)
-    //     const rowKeys = Array.from(new Set([...new Set(this.state.selectedRowKeys)]))
-    //     console.log(rowKeys)
-    //     let data = new Set();
-    //     const newData = [...this.state.dataSource];
-    //     for (var i in rowKeys) {
-    //         if (flag == "wait")
-    //             this.state.dataSource[rowKeys[i]].dState = "带班"
-    //         else if (flag == "one")
-    //             this.state.dataSource[rowKeys[i]].dState = "线路一"
-    //         else
-    //             this.state.dataSource[rowKeys[i]].dState = "线路二"
-    //         data.add(this.state.dataSource[rowKeys[i]])
-    //         const item = newData[rowKeys[i]]
-    //         newData.splice(rowKeys[i], 1, {
-    //             ...item,
-    //         });
-
-    //     }
-    //     // console.log(newData)
-    //     const { dispatch } = this.props
-    //     if (dispatch) {
-    //         dispatch({
-    //             type: 'transportation/updateDriverState',
-    //             payload: Array.from(data),
-    //             callback: response => {
-    //                 // console.log(response)
-    //                 if (response == true) {
-    //                     message.success("更新信息成功!");
-    //                     this.setState({ dataSource: newData, selectedRowKeys: [], });
-    //                 }
-    //                 else {
-    //                     message.error("更新失败:<!");
-    //                 }
-    //             }
-    //         });
-    //     }
-    // }
 
     handleFormReset = () => {
         const { form, dispatch } = this.props;
@@ -242,7 +201,7 @@ class EditableTable extends React.Component {
             formValues: {},
         });
         dispatch({
-            type: 'repository/queryRepository',
+            type: 'finance/queryFinance',
             callback: (inst, count) => this.setState({ dataSource: inst, count: inst.length }),
         });
     };
@@ -328,14 +287,6 @@ class EditableTable extends React.Component {
             };
         });
 
-
-        //多选
-        const { selectedRowKeys, createVisible } = this.state;
-        const rowSelection = {
-            selectedRowKeys,
-            onChange: this.onSelectChange,
-        };
-        const hasSelected = selectedRowKeys.length > 0;
         return (
             <PageHeaderWrapper>
                 {/* <Button onClick={(flag) => this.updateState("wait")} type="primary" style={{ marginBottom: 16 }} disabled={!hasSelected} shape="circle" >带班</Button>

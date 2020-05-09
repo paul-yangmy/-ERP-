@@ -1,4 +1,4 @@
-import { queryFinance } from '../services/finance';
+import { queryFinance,queryByDate } from '../services/finance';
 
 export default {
     namespace: 'finance',
@@ -16,6 +16,13 @@ export default {
             // console.log(response);
             if (callback) callback(response);
         },
+        *queryByDate({ payload, callback }, { call, put }) {
+            const response = yield call(queryByDate, payload);
+            console.log(payload);
+            console.log(response);
+            if (callback) callback(response);
+        },
+
     },
     reducers: {
         save(state, action) {

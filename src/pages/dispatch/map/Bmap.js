@@ -1,152 +1,114 @@
 
 import React, { Component } from 'react';
-import { Input, Button } from 'antd';
-
-export default class extends Component {
-    constructor(props) {
-        super(props);
-
-        this.setMapRef = ref => {
-            this.mapContainer = ref;
-        };
-    }
-
+import routepoints from './data'
+class Bmap extends Component {
     componentDidMount() {
-        this.createMapScript().then(this.initMap);
-    }
+        const { BMap, BMAP_STATUS_SUCCESS } = window
 
-    componentWillReceiveProps(nextProps) {
-        if (this.inited) return;
-        if (!this.mapLoaded) return;
-        // console.log(nextProps.value, this.props.value)
-        const { value } = nextProps;
-        const { point: position = { lng: undefined, lat: undefined } } = value;
-        const { point: prePosition = { lng: undefined, lat: undefined } } = this.props.value;
+        //车辆配送路径
+        function addLine(longitudeFrom, latitudeFrom, longitudeTo, latitudeTo) {
+            //if (!map)
+            //return;
+            var pointFrom = new BMap.Point(longitudeFrom, latitudeFrom);
+            var pointTo = new BMap.Point(longitudeTo, latitudeTo);
+            var driving = new BMap.DrivingRoute(map, {
+                renderOptions: {
+                    map: map,
+                    autoViewport: true
+                },
+                onPolylinesSet: function (Route) {
+                    //当线条添加完成时调用
+                    for (var i = 0; i < Route.length; i++) {
+                        var polyline = Route[i].getPolyline();//获取线条遮挡物
+                        polyline.setStrokeColor('#' + Math.floor(Math.random() * 16777215).toString(16));//设置颜色
+                        polyline.setStrokeWeight(5);//设置宽度
+                        polyline.setStrokeOpacity(1);//设置透明度
+                    }
+                },
+                onMarkersSet: function (routes) {
+                    //当地图标记添加完成时调用
+                    for (var i = 0; i < routes.length; i++) {
+                        //判断是否是途经点
+                        if (typeof (routes[i].Km) == "undefined") {
+                            map.removeOverlay(routes[i].marker); //删除起始默认图标
+                        } else {
+                            map.removeOverlay(routes[i].Km); //删除途经默认图标
+                        }
+                    }
+                }
+            });
 
-        if (position.lng && position.lat && !prePosition.lng && !prePosition.lat) {
-            // console.log(position)
-            const point = new global.BMap.Point(position.lng, position.lat);
-            this.map.panTo(point);
-            if (this.marker) {
-                this.marker.setPosition(point);
-            } else {
-                this.marker = new global.BMap.Marker(point);
-                this.map.addOverlay(this.marker);
+            driving.enableAutoViewport();//自动调整层级
+
+            driving.search(pointFrom, pointTo);
+
+        }
+
+        //创建标注点并添加到地图中
+        function addMarker(routepoints) {
+            //循环建立标注点
+            for (var j = 0, pointx = routepoints.length; j < pointx; j++) {
+                for (var i = 0, pointsLen = routepoints[j].length; i < pointsLen; i++) {
+                    var point = new BMap.Point(routepoints[j][i].lng, routepoints[j][i].lat); //将标注点转化成地图上的点
+                    //起点终点颜色标注
+                    if (i == 0) {
+                        var marker = new BMap.Label("起点", { position: point });
+                    }
+                    else if (i == pointsLen - 1) {
+                        var marker = new BMap.Label("终点", { position: point });
+                    }
+                    else {
+                        var marker = new BMap.Marker(point); //将点转化成标注点
+                    }
+                    map.addOverlay(marker); //将标注点添加到地图上
+
+                }
             }
-            this.inited = true;
+
         }
+
+        // 百度地图API功能
+        var map = new BMap.Map("allmap"); // 创建Map实例
+        map.centerAndZoom(new BMap.Point(121.4, 31.2), 12); // 初始化地图,设置中心点坐标和地图级别
+        map.addControl(new BMap.MapTypeControl()); //添加地图类型控件
+        map.addControl(new BMap.NavigationControl()); //添加控件：缩放地图的
+        map.addControl(new BMap.ScaleControl()); //添加控件：地图显示比例的控件，默认在左下方；
+        map.addControl(new BMap.OverviewMapControl()); //添加控件：地图的缩略图的控件，默认在右下方； TrafficControl    
+        map.setCurrentCity("上海"); // 设置地图显示的城市 此项是必须设置的
+        map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+        for (var j = 0, pointx = routepoints.length; j < pointx; j++) {
+            for (var i = 0, pointsLen = routepoints[j].length - 1; i < pointsLen; i++) {
+                addLine(routepoints[j][i].lng, routepoints[j][i].lat,
+                    routepoints[j][i + 1].lng, routepoints[j][i + 1].lat);
+            }
+        }
+        addMarker(routepoints);
+        /*window.onload = function () {
+            var url = "c101.json";
+            var request = new XMLHttpRequest();
+            request.open("get",url);
+            request.send(null);
+            request.onload = function () {
+                if(request.status == 200) {
+                    routepoints = JSON.parse(request.responseText);
+                    console.log(routepoints);
+                    for (var j = 0, pointx = routepoints.length; j < pointx; j++) {
+                        for (var i = 0, pointsLen = routepoints[j].length - 1; i < pointsLen; i++) {
+                            addLine(routepoints[j][i].lng, routepoints[j][i].lat,
+                                    routepoints[j][i + 1].lng, routepoints[j][i + 1].lat);
+                        }
+                    }
+    
+                    addMarker(routepoints);
+                }
+            }
+        }*/
     }
-
-    shouldComponentUpdate() {
-        return !this.inited;
-    }
-
-    componentWillUnmount() {
-        if (this.map) {
-            this.map.removeEventListener('click', this.onMapClick);
-            this.map = null;
-        }
-    }
-
-    onMapClick = event => {
-        const { onChange } = this.props;
-        const { point } = event;
-        // this.setState({ mapCenter: { lng: point.lng, lat: point.lat } });
-
-        this.map.panTo(new global.BMap.Point(point.lng, point.lat));
-        if (this.marker) {
-            this.marker.setPosition(point);
-        } else {
-            this.marker = new global.BMap.Marker(point);
-            this.map.addOverlay(this.marker);
-        }
-
-        const myGeo = new global.BMap.Geocoder();
-        myGeo.getLocation(point, result => {
-            if (onChange) onChange(result);
-        });
-    };
-
-    setCity = (city, zoom) => {
-        this.map.setCenter(city);
-        if (zoom) this.map.setZoom(zoom);
-    };
-
-    initMap = BMap => {
-        // this.defaultCenter = getPoint(116.404, 39.915);
-        // this.mapContainer = this.mapContainer || this.mapContainerRef.current;
-        const { value } = this.props;
-        const { point: position } = value || {};
-
-        // console.log(this.props)
-
-        const map = new BMap.Map(this.mapContainer, { enableMapClick: false });
-        if (Object.keys(map).length === 0) return;
-        map.enableScrollWheelZoom();
-        const point = new BMap.Point(
-            (position && position.lng) || 116.404,
-            (position && position.lat) || 39.915
-        );
-        // console.log(point)
-        map.centerAndZoom(point, 15);
-        map.setDefaultCursor('pointer');
-
-        map.addControl(new BMap.OverviewMapControl({ isOpen: true, size: new BMap.Size(140, 110) }));
-        // map.addControl(new BMap.NavigationControl({type: global.BMAP_NAVIGATION_CONTROL_ZOOM}));
-        map.addControl(new BMap.NavigationControl());
-
-        // console.log(value);
-
-        // map.addEventListener('tilesloaded', ()=>{
-        // });
-        if (position && position.lng && position.lat) {
-            this.marker = new BMap.Marker(point);
-            map.addOverlay(this.marker);
-        } else {
-            const myCity = new BMap.LocalCity();
-            myCity.get(result => {
-                // console.log(result)
-                map.setCenter(result.name);
-            });
-        }
-        map.addEventListener('click', this.onMapClick);
-
-        this.map = map;
-        this.mapLoaded = true;
-    };
-
-    createMapScript = () => {
-
-        window.BMap = window.BMap || {};
-        if (Object.keys(window.BMap).length === 0) {
-            window.BMap.b_preload = new Promise(resolve => {
-                const $script = document.createElement('script');
-                document.body.appendChild($script);
-                window.b_initBMap = () => {
-                    resolve(window.BMap);
-                    document.body.removeChild($script);
-                    window.BMap.b_preload = null;
-                    window.b_initBMap = null;
-                };
-
-                $script.src = `https://api.map.baidu.com/api?v=3.0&ak=Df2dTeW5lgfOt8cKcv5G74KthYt7cI9N&callback=b_initBMap`;
-            });
-            return window.BMap.b_preload;
-        }
-
-        if (!window.BMap.b_preload) {
-            return Promise.resolve(window.BMap);
-        }
-        return window.BMap.b_preload;
-    };
 
     render() {
-        const { width = '100%', height = 400, style } = this.props;
-
         return (
-            <div style={{ border: 'solid 1px #e1e1e1', marginBottom: 16, borderRadius: 5 }}>
-                <div ref={this.setMapRef} style={{ width, height, ...style }} />
-            </div>
+            <div id="allmap" style={{ width: '100%', height: '350px' }}></div>
         );
     }
 }
+export default Bmap;
