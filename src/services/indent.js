@@ -20,4 +20,10 @@ export async function createIndent(params) {
         data: params,
     });
 }
+export async function updateIndent(params) {
+    return request('/indent/UpdateIndent', {
+        method: 'POST',
+        data: params,
+    });
+}
 

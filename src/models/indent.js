@@ -1,4 +1,4 @@
-import { queryIndent, queryIndentByItemId, queryDetailByIndId, createIndent } from '../services/indent';
+import { queryIndent, queryIndentByItemId, queryDetailByIndId, createIndent,updateIndent } from '../services/indent';
 
 export default {
     namespace: 'indent',
@@ -33,6 +33,13 @@ export default {
         *create({ payload, callback }, { call }) {
             console.log(payload)
             const response = yield call(createIndent, payload);
+            if (callback) {
+                callback(response);
+            }
+        },
+        *update({ payload, callback }, { call }) {
+            console.log(payload)
+            const response = yield call(updateIndent, payload);
             if (callback) {
                 callback(response);
             }
