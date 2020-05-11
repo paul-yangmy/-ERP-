@@ -40,8 +40,8 @@ class EditableTable extends React.Component {
         this.columns = [
             {
                 title: '仓库编号',
-                dataIndex: 'repoId',
-                key: 'repoId',
+                dataIndex: 'repoName',
+                key: 'repoName',
             },
             {
                 title: '仓库类型',
@@ -123,13 +123,13 @@ class EditableTable extends React.Component {
             },
             {
                 title: '关联入库单号',
-                dataIndex: 'inStorage.inId',
-                key: 'inStorage.inId',
+                dataIndex: 'inStorage.inIdName',
+                key: 'inStorage.inIdName',
             },
             {
                 title: '关联出库单号',
-                dataIndex: 'outStorage.outId',
-                key: 'outStorage.outId',
+                dataIndex: 'outStorage.outIdName',
+                key: 'outStorage.outIdName',
             },
             {
                 title: '维护费',

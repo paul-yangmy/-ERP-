@@ -299,10 +299,12 @@ class CreatePurchase extends React.Component {
                             }
                             defaultValue="请选择商品状态"
                         >
-                            <Option value="已上架">已上架</Option>
-                            <Option value="已下架">已下架</Option>
+                            <Option value="采购中">采购中</Option>
+                            <Option value="已收货（未验收）">已收货（未验收）</Option>
+                            <Option value="验收合格">验收合格</Option>
                         </Select>)}
                     </Form.Item>
+                    
                     <Form.Item
                         label={
                         <span>
@@ -417,8 +419,7 @@ class EditableTable extends React.Component {
         //后端交互
         var date = new Date()//id格式
         date = this.dateToString(date);
-        console.log(date)
-        var num = Math.floor(Math.random() * 10 + 1);
+        data.buyDate=date;
         const { dispatch } = this.props;
         data.buyId = date;
         // data.order

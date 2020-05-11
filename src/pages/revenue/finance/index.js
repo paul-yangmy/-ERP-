@@ -1,10 +1,15 @@
 import { connect } from 'dva';
 import {
-    Table, Card, message, Button, DatePicker, Form, Icon, Upload, Avatar, Select, Modal, Checkbox, Row, Col
+    Table, Card, message, Button, DatePicker, Form,  Row, Col
 } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import ReactDOM from 'react-dom';
+import React, { useState } from 'react';
+import { formatRangeDate } from '../../../utils/utils';
+
+const { RangePicker } = DatePicker;
+
 // 编辑修改子框
 const EditableContext = React.createContext();
 const EditableRow = ({ form, index, ...props }) => (
@@ -128,7 +133,7 @@ class EditableTable extends React.Component {
                 title: '财政单号',
                 dataIndex: 'financeId',
                 key: 'financeId',
-                editable: true,
+                editable: false,
             },
             {
                 title: '报单状态',
@@ -140,7 +145,7 @@ class EditableTable extends React.Component {
                 title: '提交时间',
                 dataIndex: 'submitTime',
                 key: 'submitTime',
-                editable: true,
+                editable: false,
             },
             {
                 title: '报单总额',
@@ -174,7 +179,7 @@ class EditableTable extends React.Component {
         const { dispatch } = this.props;
         if (dispatch) {
             dispatch({
-                type: 'finance/updateDriver',
+                type: 'finance/updateState',
                 payload: newData[index],
                 callback: response => {
                     if (response == true) {
@@ -189,11 +194,7 @@ class EditableTable extends React.Component {
         }
     }
 
-    onSelectChange = selectedRowKeys => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
-        this.setState({ selectedRowKeys });
-    };
-
+    
     handleFormReset = () => {
         const { form, dispatch } = this.props;
         form.resetFields();
@@ -213,6 +214,7 @@ class EditableTable extends React.Component {
 
         form.validateFields((err, fieldsValue) => {
             if (err) return;
+            console.log(fieldsValue)
             const { beginDate = '', endDate = '' } = formatRangeDate(fieldsValue.rangeDate);
             // console.log(beginDate)
             const values = {
@@ -227,7 +229,7 @@ class EditableTable extends React.Component {
             console.log(values.beginDate)
 
             dispatch({
-                type: 'repository/queryByDate',
+                type: 'finance/queryByDate',
                 payload: { values },
                 callback: (inst, count) => this.setState({ dataSource: inst, count: inst.length }),
             });
@@ -315,7 +317,6 @@ class EditableTable extends React.Component {
                                 dataSource={this.state.dataSource}
                                 columns={columns}
                                 rowClassName={() => 'editable-row'}
-                                rowSelection={rowSelection}
                             />
                         </div>
 

@@ -15,14 +15,7 @@ const plugins = [
       dva: {
         hmr: true,
       },
-      locale: {
-        // default false
-        enable: false,
-        // default zh-CN
-        default: 'zh-CN',
-        // default true, when it is true, will use `navigator.language` overwrite default
-        baseNavigator: true,
-      },
+      locale: false,
       // dynamicImport: {
       //   loadingComponent: './components/PageLoading/index',
       //   webpackChunkName: true,
@@ -178,7 +171,7 @@ export default {
                       path: '/storeroom/output',
                       component: './storeroom/output',
                     },
-                  ]
+                  ],
                 },
                 {
                   path: '/dispatch',
@@ -197,7 +190,7 @@ export default {
                       path: '/dispatch/driver',
                       component: './dispatch/driver',
                     },
-                  ]
+                  ],
                 },
                 {
                   path: '/revenue',
@@ -216,9 +209,8 @@ export default {
                       path: '/revenue/analysis',
                       component: './revenue/analysis',
                     },
-                  ]
-                },
-                // {
+                  ],
+                }, // {
                 //   path: '/profile',
                 //   name: 'profile',
                 //   icon: 'profile',
@@ -237,7 +229,6 @@ export default {
                 //     },
                 //   ],
                 // },
-                
                 {
                   name: '个人设置',
                   icon: 'user',
@@ -279,7 +270,7 @@ export default {
         context.resourcePath.includes('node_modules') ||
         context.resourcePath.includes('ant.design.pro.less') ||
         context.resourcePath.includes('global.less') ||
-        context.resourcePath.includes('.css')//解决CSS文件加载失败的问题
+        context.resourcePath.includes('.css') //解决CSS文件加载失败的问题
       ) {
         return localName;
       }
@@ -300,7 +291,8 @@ export default {
   },
   manifest: {
     basePath: '/',
-  }, // chainWebpack: webpackPlugin,
+  },
+  // chainWebpack: webpackPlugin,
   // proxy: {
   //   '/server/api/': {
   //     target: 'https://preview.pro.ant.design/',
@@ -312,47 +304,66 @@ export default {
     '/currentUser/': {
       target: 'http://106.13.214.108:8080/userController',
       changeOrigin: true,
-      pathRewrite: { '^/currentUser': '' },
+      pathRewrite: {
+        '^/currentUser': '',
+      },
     },
     '/graph/': {
       target: 'http://106.13.214.108:8080/uploadGraph',
       changeOrigin: true,
-      pathRewrite: { '^/graph': '' },
+      pathRewrite: {
+        '^/graph': '',
+      },
     },
     '/commodity/': {
       target: 'http://106.13.214.108:8080/table/Commodity',
       changeOrigin: true,
-      pathRewrite: { '^/commodity': '' },
+      pathRewrite: {
+        '^/commodity': '',
+      },
     },
     '/testReport/': {
       target: 'http://106.13.214.108:8080/table/TestReport',
       changeOrigin: true,
-      pathRewrite: { '^/testReport': '' },
+      pathRewrite: {
+        '^/testReport': '',
+      },
     },
     '/indent/': {
       target: 'http://106.13.214.108:8080/indent',
       changeOrigin: true,
-      pathRewrite: { '^/indent': '' },
+      pathRewrite: {
+        '^/indent': '',
+      },
     },
     '/buy/': {
       target: 'http://106.13.214.108:8080/buy',
       changeOrigin: true,
-      pathRewrite: { '^/buy': '' },
+      pathRewrite: {
+        '^/buy': '',
+      },
     },
     '/repo/': {
       target: 'http://106.13.214.108:8080/repo',
       changeOrigin: true,
-      pathRewrite: { '^/repo': '' },
+      pathRewrite: {
+        '^/repo': '',
+      },
     },
     '/delivery/': {
       target: 'http://106.13.214.108:8080/delivery',
       changeOrigin: true,
-      pathRewrite: { '^/delivery': '' },
+      pathRewrite: {
+        '^/delivery': '',
+      },
     },
     '/finance/': {
       target: 'http://106.13.214.108:8080/finance',
       changeOrigin: true,
-      pathRewrite: { '^/finance': '' },
+      pathRewrite: {
+        '^/finance': '',
+      },
     },
   },
 };
+

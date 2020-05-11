@@ -67,7 +67,7 @@ class EditableCell extends React.Component {
                             ref={node => (this.input = node)}
                         >
                             <Option value="分拣完成">分拣完成</Option>
-                            <Option value="采购中">采购中</Option>
+                            <Option value="采购完成">采购完成</Option>
                         </Select>)}
                     </Form.Item>
                 )
@@ -120,8 +120,8 @@ class InStorage extends React.Component {
         this.columns = [
             {
                 title: '入库单号',
-                dataIndex: 'inId',
-                width: 100,
+                dataIndex: 'inIdName',
+                width: 140,
                 key: 'inId',
             },
             { title: '入库时间', dataIndex: 'inDate' },
@@ -171,7 +171,10 @@ class InStorage extends React.Component {
                 callback: response => {
                     if (response == true) {
                         message.success("更新信息成功!");
-                        this.setState({ dataSource: newData });
+                        dispatch({
+                            type: 'repository/queryInStorage',
+                            callback: (inst, count) => this.setState({ dataSource: inst, count: inst.length }),
+                        });
                     }
                     else {
                         message.error("更新失败:<!");
@@ -196,7 +199,7 @@ class InStorage extends React.Component {
                     if (flag == "one")
                         this.state.dataSource[j].inState = "分拣完成"
                     else
-                        this.state.dataSource[j].inState = "采购中"
+                        this.state.dataSource[j].inState = "采购完成"
                     data.add(this.state.dataSource[j])
                     const item = newData[j]
                     newData.splice(j, 1, {
@@ -265,7 +268,7 @@ class InStorage extends React.Component {
                 <Card>
                     <Button onClick={(flag) => this.updateState("one")} type="primary" style={{ marginBottom: 16 }} disabled={!hasSelected} shape="circle" >分拣完成</Button>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <Button onClick={(flag) => this.updateState("two")} type="primary" style={{ marginBottom: 16 }} disabled={!hasSelected} shape="circle" >采购中</Button>
+                    <Button onClick={(flag) => this.updateState("two")} type="primary" style={{ marginBottom: 16 }} disabled={!hasSelected} shape="circle" >采购完成</Button>
                     
                     <Table
                         bordered
