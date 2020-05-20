@@ -131,8 +131,8 @@ class EditableTable extends React.Component {
         this.columns = [
             {
                 title: '财政单号',
-                dataIndex: 'financeId',
-                key: 'financeId',
+                dataIndex: 'finName',
+                key: 'finName',
                 editable: false,
             },
             {

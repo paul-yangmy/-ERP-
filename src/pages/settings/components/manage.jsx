@@ -223,7 +223,7 @@ class ChangeUser extends React.Component {
                         label="组别"
                     >
                         {getFieldDecorator('uGroup', {
-                            rules: [{ required: true, message: '阿斯顿' }],
+                            rules: [{ required: true, message: '请输入权限!' }],
                         })(<Select
                             showSearch
                             optionFilterProp="children"

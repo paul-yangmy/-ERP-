@@ -97,61 +97,6 @@ class transMap extends React.Component {
         ];
     }
     componentDidMount(){
-        // const map = new window.BMap.Map("container");
-        // const point = new window.BMap.Point(116.404, 39.915);  // 创建点坐标  
-        // map.centerAndZoom(point, 18);
-        // map.enableScrollWheelZoom(true);
-        // // map.dblclick(ture);
-        // map.addControl(new window.BMap.NavigationControl());
-        // map.addControl(new window.BMap.ScaleControl());
-        // map.addControl(new window.BMap.OverviewMapControl());
-        // map.addControl(new window.BMap.MapTypeControl());
-        // //根据浏览器定位
-        // var geolocation = new window.BMap.Geolocation();
-        // geolocation.getCurrentPosition(function (r) {
-        //     if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-        //         var mk = new window.BMap.Marker(r.point);
-        //         map.addOverlay(mk);
-        //         map.panTo(r.point);
-        //         alert('您的位置：' + r.point.lng + ',' + r.point.lat);
-        //     }
-        //     else {
-        //         alert('failed' + this.getStatus());
-        //     }
-        // }, { enableHighAccuracy: true })
-        // /*
-        //     BMAP_STATUS_SUCCESS	检索成功。对应数值“0”。
-        //     BMAP_STATUS_CITY_LIST	城市列表。对应数值“1”。
-        //     BMAP_STATUS_UNKNOWN_LOCATION	位置结果未知。对应数值“2”。
-        //     BMAP_STATUS_UNKNOWN_ROUTE	导航结果未知。对应数值“3”。
-        //     BMAP_STATUS_INVALID_KEY	非法密钥。对应数值“4”。
-        //     BMAP_STATUS_INVALID_REQUEST	非法请求。对应数值“5”。
-        //     BMAP_STATUS_PERMISSION_DENIED	没有权限。对应数值“6”。(自 1.1 新增)
-        //     BMAP_STATUS_SERVICE_UNAVAILABLE	服务不可用。对应数值“7”。(自 1.1 新增)
-        //     BMAP_STATUS_TIMEOUT	超时。对应数值“8”。(自 1.1 新增)
-        // */
-        // //驾车路线规划
-        // var options = {
-        //     onSearchComplete: function (results) {
-        //         if (driving.getStatus() == BMAP_STATUS_SUCCESS) {
-        //             // 获取第一条方案 
-        //             var plan = results.getPlan(0);
-        //             // 获取方案的驾车线路 
-        //             var route = plan.getRoute(0);
-        //             // 获取每个关键步骤，并输出到页面 
-        //             var s = [];
-        //             for (var i = 0; i < route.getNumSteps(); i++) {
-        //                 var step = route.getStep(i);
-        //                 // console.log(step);
-        //             }
-        //         }
-        //     }
-        // };
-        // var driving = new window.BMap.DrivingRoute(map, options);
-        // var start = new window.BMap.Point(116.310791, 40.003419);
-        // var end = new window.BMap.Point(110.486419, 39.877282);
-        // console.log(driving)
-        // driving.search(start, end);
         const { dispatch } = this.props;
         dispatch({
             type: 'transportation/queryTransportation',

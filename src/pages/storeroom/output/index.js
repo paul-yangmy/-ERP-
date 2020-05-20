@@ -120,9 +120,9 @@ class outStorage extends React.Component {
         this.columns = [
             {
                 title: '出库单号',
-                dataIndex: 'outId',
-                width: 100,
-                key: 'outId',
+                dataIndex: 'outName',
+                width: 140,
+                key: 'outName',
                
             },
             { title: '出库时间', dataIndex: 'outDate' },
@@ -130,7 +130,7 @@ class outStorage extends React.Component {
             { title: '仓库类型', dataIndex: 'storageNam'},
             { title: '顾客', dataIndex: 'customer' },
             { title: '制表人', dataIndex: 'lister'},
-            { title: '账单金额', dataIndex: 'indent.totalAmount' },
+            { title: '配送费', dataIndex: 'outFee' },
             { title: '状态', dataIndex: 'outState' ,editable: true},
         ];
         this.state = {

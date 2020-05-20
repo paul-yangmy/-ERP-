@@ -62,7 +62,7 @@ class EditableCell extends React.Component {
                             }
                             ref={node => (this.input = node)}
                         >
-                            <Option value="带班">带班</Option>
+                            <Option value="待班">待班</Option>
                             <Option value="线路一">线路一</Option>
                             <Option value="线路二">线路二</Option>
                         </Select>)}
@@ -273,7 +273,7 @@ class EditableTable extends React.Component {
         //后端交互
         const { dispatch } = this.props;
         data.dId = this.state.count + 1;
-        data.dState="带班";
+        data.dState="待班";
         const dataSource = [...this.state.dataSource];
         console.log(data)
         dispatch({
@@ -372,7 +372,7 @@ class EditableTable extends React.Component {
         const newData = [...this.state.dataSource];
         for (var i in rowKeys) {
             if (flag == "wait")
-                this.state.dataSource[rowKeys[i]].dState = "带班"
+                this.state.dataSource[rowKeys[i]].dState = "待班"
             else if (flag == "one")
                 this.state.dataSource[rowKeys[i]].dState = "线路一"
             else
@@ -446,7 +446,7 @@ class EditableTable extends React.Component {
                 <Createtransportation props={this.props} onOk={this.onOk} onCancel={this.onCancel} visible={createVisible} />
                 &nbsp;&nbsp;
                 <Divider type="vertical" />
-                <Button onClick={(flag) => this.updateState("wait")} type="primary" style={{ marginBottom: 16 }} disabled={!hasSelected} shape="circle" >带班</Button>
+                <Button onClick={(flag) => this.updateState("wait")} type="primary" style={{ marginBottom: 16 }} disabled={!hasSelected} shape="circle" >待班</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <Button onClick={(flag) => this.updateState("one")} type="primary" style={{ marginBottom: 16 }} disabled={!hasSelected} shape="circle" >线路一</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
